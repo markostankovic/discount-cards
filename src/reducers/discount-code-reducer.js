@@ -4,11 +4,12 @@ import {
   INVALIDATE_CODE
 } from '../actions/discount-cards-actions'
 
-const posts = (state = {
+const codes = (state = {
   isFetching: false,
   didInvalidate: false,
-  items: []
+  cardData: null
 }, action) => {
+  console.log('----', action.cardData);
   switch (action.type) {
     case INVALIDATE_CODE:
       return {
@@ -26,7 +27,7 @@ const posts = (state = {
         ...state,
         isFetching: false,
         didInvalidate: false,
-        items: action.posts,
+        cardData: action.cardData,
         lastUpdated: action.receivedAt
       }
     default:
@@ -41,7 +42,7 @@ export const discountCards = (state = { }, action) => {
     case REQUEST_CODE:
       return {
         ...state,
-        codeData: posts(state.codeData, action)
+        codeData: codes(state.codeData, action)
       }
     default:
       return state

@@ -18,7 +18,7 @@ import { fetchCode } from '../actions/discount-cards-actions';
 
 class ScanView extends Component {
   static propTypes = {
-    posts: PropTypes.array.isRequired,
+    cardData: PropTypes.object,
     isFetching: PropTypes.bool.isRequired,
     lastUpdated: PropTypes.number,
     dispatch: PropTypes.func.isRequired
@@ -44,15 +44,21 @@ class ScanView extends Component {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.cardData && nextProps.cardData.activated !== 'true') {
+
+    }
+  }
+
   onButtonPress() {
     const { dispatch } = this.props;
-    dispatch(fetchCode('react-native'))
-    Alert.alert('Button has been pressed!');
+    dispatch(fetchCode('04100f2a9e4a81')); //valid
+    // dispatch(fetchCode('0452ab2a9e4a80')); //invalid
+    // Alert.alert('Button has been pressed!');
   }
 
   render() {
-    const { selectedReddit, posts, isFetching, lastUpdated } = this.props;
-    const isEmpty = posts.length === 0;
+    const { cardData, isFetching, lastUpdated } = this.props;
 
     return (
       <View style={styles.container}>
@@ -68,10 +74,13 @@ class ScanView extends Component {
           color="#841584"
           accessibilityLabel="Learn more about purple"
         />
-        { isEmpty ?
+        { !cardData ?
           (isFetching ? <Text>Loading...</Text> : <Text>Empty.</Text>) :
             <View style={{ opacity: isFetching ? 0.5 : 1 }}>
-              <Posts posts={posts} />
+              <Text style={styles.instructions}>
+                Card Id: { cardData.discountCode }
+                serial Number: { cardData.serialNumber }
+              </Text>
             </View>
         }
       </View>
@@ -103,14 +112,14 @@ const mapStateToProps = state => {
   const {
     isFetching,
     lastUpdated,
-    items: posts
+    cardData
   } = discountCards.codeData || {
-    isFetching: true,
-    items: []
+    isFetching: false,
+    cardData: null
   }
 
   return {
-    posts,
+    cardData,
     isFetching,
     lastUpdated
   }
