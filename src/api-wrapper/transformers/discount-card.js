@@ -2,12 +2,15 @@ import Moment from 'moment';
 
 const DiscountCardTransformer = {
   fromAPIModel(apiModel) {
-    const startDate = apiModel.startDate ? Moment(apiModel.startDate).add(3, 'days') : null;
+    const activated = apiModel.active === 'true';
     const currentDate = Moment.unix(apiModel.currentDate);
+    const startDate = apiModel.startDate && activated ? Moment(apiModel.startDate) : null;
+    const endDate = apiModel.endDate && activated ? Moment(apiModel.endDate) : currentDate.clone().add(3, 'days');
+
     let validCard = true;
 
     if (startDate) {
-      if (currentDate.isAfter(startDate)) {
+      if (currentDate.isAfter(endDate)) {
         validCard = false;
       }
     }
@@ -15,8 +18,12 @@ const DiscountCardTransformer = {
     return {
       ...apiModel,
       valid: !startDate || apiModel.active !== 'true' || validCard,
-      activated: apiModel.active === 'true',
+      activated: activated,
+      id: apiModel.nid,
       dateNow: Moment(),
+      currentDate: currentDate,
+      endDate: endDate,
+      startDate: startDate ? startDate : currentDate,
     };
   },
 };
