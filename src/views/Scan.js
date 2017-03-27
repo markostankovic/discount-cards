@@ -25,12 +25,16 @@ class ScanView extends Component {
     header: (navigation, defaultHeader) => ({
       ...defaultHeader,
       visible: true,
+      style: {
+        backgroundColor: '#222222',
+      },
+      title: 'Scan Card',
+      tintColor: '#e9e9e9',
     }),
   };
 
   constructor(props) {
     super(props);
-    this.state = { cardID: null };
     this._listener = null;
   }
 
@@ -38,10 +42,7 @@ class ScanView extends Component {
     const { dispatch } = this.props;
 
     this._listener = DeviceEventEmitter.addListener('NFCTagDetected', (res) => {
-      console.log('DeviceEventEmitter listened.');
-      console.log(res);
       dispatch(fetchCode(res.serial));
-      this.setState({ cardID: res.serial });
     });
   }
 
@@ -52,15 +53,14 @@ class ScanView extends Component {
   componentWillReceiveProps(nextProps) {
     const { dispatch } = this.props;
 
-    if (nextProps.cardData && !nextProps.cardData.activated) {
-      console.log('---update card---');
+    if (nextProps.cardData && !nextProps.cardData.activated && nextProps.cardData.valid ) {
       dispatch(updateDiscountCard(nextProps.cardData));
     }
   }
 
   onButtonPress() {
     const { dispatch } = this.props;
-    dispatch(fetchCode('804A9E2AAB5204')); //valid
+    dispatch(fetchCode('804A9E2AAB5204xx')); //valid
     // dispatch(fetchCode('0452ab2a9e4a80')); //invalid
     // Alert.alert('Button has been pressed!');
   }
@@ -71,45 +71,36 @@ class ScanView extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.contentWrapper}>
-          <Text style={styles.welcome}>
-            Scan Card
-          </Text>
-          <Text style={styles.instructions}>
-            Card Id: { this.state.cardID }
-          </Text>
-          <Button
-            onPress={ () => this.onButtonPress() }
-            title="Press Purple"
-            color="#841584"
-            accessibilityLabel="Learn more about purple"
-          />
           { cardData ?
-            <View style={{ opacity: isFetching ? 0.5 : 1 }}>
-              <Text style={styles.instructions}>
-                serial Number: { cardData.serialNumber }
-              </Text>
-              <Text style={styles.instructions}>
-                activated: { cardData.activated ? 1 : 0 }
-              </Text>
-              <Text style={styles.instructions}>
-                valid: { cardData.valid ? 1 : 0 }
-              </Text>
-              <Text style={styles.validIndicatorWrapper}>
-                { cardData.valid ?
-                  <Ionicons
-                    name='ios-checkmark-circle-outline'
-                    size={ 100 }
-                    color='#008000'
-                    // style={{ marginRight: 15 }}
-                  /> :
+            <Text style={styles.validIndicatorWrapper}>
+              { cardData.valid ?
+                <Ionicons
+                  name='ios-checkmark-circle-outline'
+                  size={ 100 }
+                  color='#008000' /> :
+                cardData.startDate ?
                   <Ionicons
                     name='ios-close-circle-outline'
                     size={ 100 }
-                    color='#b22222'
-                    // style={{ marginRight: 15 }}
-                  /> }
-              </Text>
-            </View> : null }
+                    color='#b22222' /> :
+                  <Ionicons
+                    name='ios-help-circle-outline'
+                    size={ 100 }
+                    color='#b22222' />
+              }
+            </Text> :
+            <Text style={styles.validIndicatorWrapper}>
+              <Ionicons
+                name='ios-qr-scanner'
+                size={ 100 }
+                color='grey' />
+            </Text> }
+          <Button
+            onPress={ () => this.onButtonPress() }
+            title="Simulate Scan"
+            color="#b22222"
+            accessibilityLabel="Learn more about purple"
+          />
         </View>
         { isFetching ? <Loading /> : null }
       </View>
@@ -122,7 +113,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'whitesmoke'
   },
   welcome: {
     fontSize: 20,
@@ -139,7 +130,9 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     zIndex: 0,
-    flex: 1
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });
 

@@ -15,7 +15,7 @@ export const requestCard = codeId => ({
 export const receivePosts = (codeId, json) => ({
   type: RECEIVE_DISCOUNT_CARD,
   codeId,
-  cardData: json ? transformDiscountCard.fromAPIModel(json[0]) : null,
+  cardData: json.length > 0 ? transformDiscountCard.fromAPIModel(json) : transformDiscountCard.fromAPIModel(false),
   receivedAt: Date.now()
 });
 

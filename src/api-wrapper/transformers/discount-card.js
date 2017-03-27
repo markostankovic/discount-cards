@@ -2,6 +2,13 @@ import Moment from 'moment';
 
 const DiscountCardTransformer = {
   fromAPIModel(apiModel) {
+    if (!apiModel) {
+      return {
+        valid: false,
+        activated: false,
+        startDate: false,
+      }
+    }
     const activated = apiModel.active === 'true';
     const currentDate = Moment.unix(apiModel.currentDate);
     const startDate = apiModel.startDate && activated ? Moment(apiModel.startDate) : null;

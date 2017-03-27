@@ -8,6 +8,7 @@ import {
   Text,
   ScrollView,
   View,
+  TouchableHighlight,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -18,14 +19,18 @@ class MainView extends Component {
       ...defaultHeader,
       visible: true,
       title: 'Welcome',
+      style: {
+        backgroundColor: '#222222',
+      },
+      tintColor: '#e9e9e9',
       right: (
-        <Ionicons
-          name='ios-qr-scanner'
-          size={ 26 }
-          color='#000'
-          style={{ marginRight: 15 }}
-          onPress={() => navigation.navigate('Scan')}
-        />
+        <TouchableHighlight style={{ padding: 15 }} onPress={() => navigation.navigate('Scan')}>
+          <Ionicons
+            name='ios-qr-scanner'
+            size={ 26 }
+            color='#e9e9e9'
+          />
+        </TouchableHighlight>
       ),
     }),
   };
@@ -34,13 +39,7 @@ class MainView extends Component {
 
     return (
       <View style={styles.container}>
-        <ScrollView>
-          <Text style={styles.instructions}>
-            Main View
-          </Text>
-          <Text style={styles.instructions}>
-            123
-          </Text>
+        <ScrollView style={{ paddingTop: 100}}>
           <Button
             onPress={() => navigate('Register')}
             title="Register New Code"
@@ -57,7 +56,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'whitesmoke'
   },
   welcome: {
     fontSize: 20,

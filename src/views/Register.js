@@ -25,7 +25,11 @@ class RegisterView extends Component {
     header: (navigation, defaultHeader) => ({
       ...defaultHeader,
       visible: true,
-      title: 'Register New Discount Card'
+      title: 'Register New Discount Card',
+      style: {
+        backgroundColor: '#222222',
+      },
+      tintColor: '#e9e9e9',
     }),
   };
 
@@ -57,14 +61,6 @@ class RegisterView extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.contentWrapper}>
-          <Text style={styles.welcome}>
-            Register New Discount Card
-          </Text>
-          <Button
-            onPress={ () => this.onButtonPress() }
-            title="Register New"
-            color="#b22222"
-            accessibilityLabel="Learn more about purple" />
           <Text style={styles.indicatorWrapper}>
             { !newCard ?
               <Ionicons
@@ -76,6 +72,11 @@ class RegisterView extends Component {
                 size={ 100 }
                 color='#008000' /> }
           </Text>
+          <Button
+            onPress={ () => this.onButtonPress() }
+            title="Simulate Register"
+            color="#b22222"
+            accessibilityLabel="Learn more about purple" />
         </View>
         { isRegistering ? <Loading /> : null }
       </View>
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'whitesmoke'
   },
   welcome: {
     fontSize: 20,
@@ -105,7 +106,9 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     zIndex: 0,
-    flex: 1
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });
 
