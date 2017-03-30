@@ -15,7 +15,7 @@ export const requestCard = codeId => ({
 export const receivePosts = (codeId, json) => ({
   type: RECEIVE_DISCOUNT_CARD,
   codeId,
-  cardData: json.length > 0 ? transformDiscountCard.fromAPIModel(json) : transformDiscountCard.fromAPIModel(false),
+  cardData: json.length > 0 ? transformDiscountCard.fromAPIModel(json[0]) : transformDiscountCard.fromAPIModel(false),
   receivedAt: Date.now()
 });
 
@@ -58,11 +58,23 @@ export const registeredCard = (codeId, json) => ({
   newCard: json ? json : null,
 });
 
-export const registerNewDiscountCard = serialNumber => dispatch => {
-
+export const registerNewDiscountCard = (serialNumber, distributorId) => dispatch => {
   const startDate = Moment().format('X');
 
   dispatch(registeringCard(serialNumber));
+
+  const body = {
+    '_links': {'type': {'href': 'http://gotravelersdiscount.com/rest/type/node/discount_code'}},
+    'type': [{
+      'target_id': 'discount_code'
+    }],
+    'title': [{'value': startDate + '_' + serialNumber}],
+    'field_serial_number': [{'value': serialNumber}],
+    'field_discount_code': [{'value': '0'}],
+    'field_distributor': [{
+      target_id: distributorId,
+      target_type: "taxonomy_term" }],
+  };
 
   return fetch('http://gotravelersdiscount.com/entity/node?_format=hal_json', {
     method: 'POST',
@@ -72,15 +84,7 @@ export const registerNewDiscountCard = serialNumber => dispatch => {
       'Content-Type': 'application/hal+json',
       'X-CSRF-Token': '1_rxiHveMT7lA6ev8HkQcRLEY36Q7cGvy65Oxtjxjq0'
     },
-    body: JSON.stringify({
-      '_links': {'type': {'href': 'http://gotravelersdiscount.com/rest/type/node/discount_code'}},
-      'type': [{
-        'target_id': 'discount_code'
-      }],
-      'title': [{'value': startDate + '_' + serialNumber}],
-      'field_serial_number': [{'value': serialNumber}],
-      'field_discount_code': [{'value': '0'}]
-    })
+    body: JSON.stringify(body)
   }).then(response => response.json())
     .then(json => dispatch(registeredCard(serialNumber, json)))
 }

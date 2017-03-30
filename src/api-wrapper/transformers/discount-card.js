@@ -14,17 +14,18 @@ const DiscountCardTransformer = {
     const startDate = apiModel.startDate && activated ? Moment(apiModel.startDate) : null;
     const endDate = apiModel.endDate && activated ? Moment(apiModel.endDate) : currentDate.clone().add(3, 'days');
 
-    let validCard = true;
+    let expired = false;
 
     if (startDate) {
       if (currentDate.isAfter(endDate)) {
-        validCard = false;
+        expired = true;
       }
     }
 
     return {
       ...apiModel,
-      valid: !startDate || apiModel.active !== 'true' || validCard,
+      valid: !startDate || apiModel.active !== 'true' || !expired,
+      expired: startDate && activated && expired,
       activated: activated,
       id: apiModel.nid,
       dateNow: Moment(),

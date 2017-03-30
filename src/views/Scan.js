@@ -39,10 +39,8 @@ class ScanView extends Component {
   }
 
   componentDidMount(){
-    const { dispatch } = this.props;
-
     this._listener = DeviceEventEmitter.addListener('NFCTagDetected', (res) => {
-      dispatch(fetchCode(res.serial));
+      this.getDiscountCard(res.serial);
     });
   }
 
@@ -59,10 +57,7 @@ class ScanView extends Component {
   }
 
   onButtonPress() {
-    const { dispatch } = this.props;
-    dispatch(fetchCode('804A9E2AAB5204xx')); //valid
-    // dispatch(fetchCode('0452ab2a9e4a80')); //invalid
-    // Alert.alert('Button has been pressed!');
+    this.getDiscountCard('814A9E2AE54B04');
   }
 
   render() {
@@ -71,30 +66,7 @@ class ScanView extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.contentWrapper}>
-          { cardData ?
-            <Text style={styles.validIndicatorWrapper}>
-              { cardData.valid ?
-                <Ionicons
-                  name='ios-checkmark-circle-outline'
-                  size={ 100 }
-                  color='#008000' /> :
-                cardData.startDate ?
-                  <Ionicons
-                    name='ios-close-circle-outline'
-                    size={ 100 }
-                    color='#b22222' /> :
-                  <Ionicons
-                    name='ios-help-circle-outline'
-                    size={ 100 }
-                    color='#b22222' />
-              }
-            </Text> :
-            <Text style={styles.validIndicatorWrapper}>
-              <Ionicons
-                name='ios-qr-scanner'
-                size={ 100 }
-                color='grey' />
-            </Text> }
+          { this.renderCardState(cardData ? cardData : null) }
           <Button
             onPress={ () => this.onButtonPress() }
             title="Simulate Scan"
@@ -105,6 +77,50 @@ class ScanView extends Component {
         { isFetching ? <Loading /> : null }
       </View>
     );
+  }
+
+  renderCardState(cardData) {
+    const iconName =
+      cardData ?
+        cardData.valid ?
+          'ios-checkmark-circle-outline' :
+        cardData.startDate ?
+          'ios-close-circle-outline' :
+          'ios-help-circle-outline' :
+        'ios-qr-scanner';
+    const iconColor =
+      cardData ?
+        cardData.valid ? '#008000' :
+          '#b22222' :
+        'grey';
+    const cardResponseText =
+      cardData ?
+        cardData.valid ?
+          `Valid until ${ cardData.endDate.format('DD. MMM YYYY HH:ss') }` :
+          cardData.startDate ?
+            `Valid until ${ cardData.endDate.format('DD. MMM YYYY HH:ss') }` :
+            'Unknown Card' :
+        'Approach Discount Card';
+
+    return (
+      <View style={styles.cardState}>
+        <Ionicons
+          name={ iconName }
+          size={ 100 }
+          color={ iconColor } />
+        <Text style={ styles.indicatorText }>
+          { cardResponseText }
+        </Text>
+      </View>
+    );
+  }
+
+  getDiscountCard(serial) {
+    const { dispatch, isFetching } = this.props;
+
+    if (!isFetching) {
+      dispatch(fetchCode(serial));
+    }
   }
 }
 
@@ -125,8 +141,13 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
-  validIndicatorWrapper: {
+  indicatorText: {
     textAlign: 'center',
+  },
+  cardState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   contentWrapper: {
     zIndex: 0,

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Picker,
   Alert
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -36,13 +37,12 @@ class RegisterView extends Component {
   constructor(props) {
     super(props);
     this._listener = null;
+    this.state = { selectedDistributor: null };
   }
 
   componentDidMount(){
-    const { dispatch } = this.props;
-
     this._listener = DeviceEventEmitter.addListener('NFCTagDetected', (res) => {
-      dispatch(registerNewDiscountCard(res.serial));
+      this.registerNewDiscountCardHandler(res.serial);
     });
   }
 
@@ -51,8 +51,7 @@ class RegisterView extends Component {
   }
 
   onButtonPress() {
-    const { dispatch } = this.props;
-    dispatch(registerNewDiscountCard('123'));
+    this.registerNewDiscountCardHandler('1231234');
   }
 
   render() {
@@ -72,6 +71,16 @@ class RegisterView extends Component {
                 size={ 100 }
                 color='#008000' /> }
           </Text>
+          <View style={styles.pickerWrapper}>
+            <Picker
+              style={styles.distributorPicker}
+              selectedValue={this.state.selectedDistributor}
+              onValueChange={(distributorId) => this.setState({selectedDistributor: distributorId})}>
+              <Picker.Item label='Select Distributor' value={ null } />
+              <Picker.Item label='Distributor1' value={ 1 } />
+              <Picker.Item label='Distributor2' value={ 2 } />
+            </Picker>
+          </View>
           <Button
             onPress={ () => this.onButtonPress() }
             title="Simulate Register"
@@ -81,6 +90,13 @@ class RegisterView extends Component {
         { isRegistering ? <Loading /> : null }
       </View>
     );
+  }
+
+  registerNewDiscountCardHandler(serial) {
+    const { dispatch } = this.props;
+    const { selectedDistributor } = this.state;
+
+    dispatch(registerNewDiscountCard(serial, selectedDistributor));
   }
 }
 
@@ -103,6 +119,16 @@ const styles = StyleSheet.create({
   },
   indicatorWrapper: {
     textAlign: 'center',
+  },
+  distributorPicker: {
+    width: 200,
+  },
+  pickerWrapper: {
+    width: 200,
+    borderBottomColor: '#808080',
+    borderBottomWidth: 2,
+    borderStyle: 'solid',
+    marginBottom: 20,
   },
   contentWrapper: {
     zIndex: 0,
