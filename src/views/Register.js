@@ -13,13 +13,16 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { registerNewDiscountCard } from '../actions/discount-cards-actions';
+import { fetchAllDistributors } from '../actions/distributors-actions';
 import Loading from '../components/Global/Loading';
 
 class RegisterView extends Component {
   static propTypes = {
     newCard: PropTypes.object,
     isRegistering: PropTypes.bool.isRequired,
-    dispatch: PropTypes.func.isRequired
+    isFetchingDistributors: PropTypes.bool.isRequired,
+    dispatch: PropTypes.func.isRequired,
+    distributorsData: PropTypes.array,
   }
 
   static navigationOptions = {
@@ -41,6 +44,10 @@ class RegisterView extends Component {
   }
 
   componentDidMount(){
+    const { dispatch } = this.props;
+
+    dispatch(fetchAllDistributors());
+
     this._listener = DeviceEventEmitter.addListener('NFCTagDetected', (res) => {
       this.registerNewDiscountCardHandler(res.serial);
     });
@@ -55,7 +62,7 @@ class RegisterView extends Component {
   }
 
   render() {
-    const { newCard, isRegistering } = this.props;
+    const { newCard, isRegistering, distributorsData } = this.props;
 
     return (
       <View style={styles.container}>
@@ -76,9 +83,12 @@ class RegisterView extends Component {
               style={styles.distributorPicker}
               selectedValue={this.state.selectedDistributor}
               onValueChange={(distributorId) => this.setState({selectedDistributor: distributorId})}>
-              <Picker.Item label='Select Distributor' value={ null } />
-              <Picker.Item label='Distributor1' value={ 1 } />
-              <Picker.Item label='Distributor2' value={ 2 } />
+              <Picker.Item key={ 0 } label='Select Distributor' value={ null } />
+              { distributorsData ? distributorsData.map((distributor, index) => {
+                return (
+                  <Picker.Item key={ index + 1 } label={ distributor.name } value={ distributor.distributorId } />
+                );
+              }) : null }
             </Picker>
           </View>
           <Button
@@ -139,18 +149,27 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const { discountCards } = state
+  const { discountCards, distributors } = state;
   const {
     isRegistering,
     newCard
   } = discountCards.newCard || {
     isRegistering: false,
     newCard: null
-  }
+  };
+  const {
+    isFetchingDistributors,
+    distributorsData
+  } = distributors.distributorsData || {
+    isFetchingDistributors: false,
+    distributorsData: []
+  };
 
   return {
     newCard,
-    isRegistering
+    isRegistering,
+    isFetchingDistributors,
+    distributorsData,
   }
 }
 

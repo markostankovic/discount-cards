@@ -9,12 +9,14 @@ import MainView from '../views/Main';
 import ScanView from '../views/Scan';
 import TestView from '../views/Test';
 import RegisterView from '../views/Register';
+import LocationsView from '../views/Locations';
 
 const AppNavigator = StackNavigator({
   Index: { screen: MainView },
   Scan: { screen: ScanView },
   Test: { screen: TestView },
   Register: { screen: RegisterView },
+  Locations: { screen: LocationsView },
 }, {
   initialRouteName: 'Index',
 

@@ -9,6 +9,7 @@ import {
   ScrollView,
   View,
   TouchableHighlight,
+  StatusBar,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -39,13 +40,23 @@ class MainView extends Component {
 
     return (
       <View style={styles.container}>
-        <ScrollView style={{ paddingTop: 100}}>
+        <StatusBar
+          backgroundColor='#2d2d2d'
+          barStyle='light-content' />
+        <View style={styles.buttonsWrapper}>
           <Button
+            style={styles.buttonStyle}
             onPress={() => navigate('Register')}
             title="Register New Code"
-            color="#b22222"
-          />
-        </ScrollView>
+            color="#b22222" />
+        </View>
+        <View style={styles.buttonsWrapper}>
+          <Button
+            style={styles.buttonStyle}
+            onPress={() => navigate('Locations')}
+            title="Locations"
+            color="#b22222" />
+        </View>
       </View>
     );
   }
@@ -58,10 +69,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'whitesmoke'
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  buttonsWrapper: {
+    marginBottom: 20
   },
   instructions: {
     textAlign: 'center',
@@ -70,6 +79,9 @@ const styles = StyleSheet.create({
   },
   validIndicatorWrapper: {
     textAlign: 'center',
+  },
+  buttonStyle: {
+    marginBottom: 50,
   },
   indicatorContainer: {
     alignItems: 'center',
@@ -86,5 +98,3 @@ const styles = StyleSheet.create({
 });
 
 export default MainView;
-
-// AppRegistry.registerComponent('App', () => App);
