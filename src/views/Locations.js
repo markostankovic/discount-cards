@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import MapView from 'react-native-maps';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { fetchLocations, requestLocations } from '../actions/locations-actions';
+import { fetchLocations, fetchTags, requestLocations } from '../actions/locations-actions';
 import Loading from '../components/Global/Loading';
 
 const window = Dimensions.get('window');
@@ -21,8 +21,10 @@ const window = Dimensions.get('window');
 class LocationsView extends Component {
   static propTypes = {
     isFetchingLocations: PropTypes.bool.isRequired,
+    isFetchingTags: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     locationsData: PropTypes.array,
+    tagsData: PropTypes.array,
   }
 
   static navigationOptions = {
@@ -38,7 +40,7 @@ class LocationsView extends Component {
       right: (
         <TouchableHighlight style={{ padding: 15 }} onPress={() => navigation.state.params.handleModalFilter()}>
           <Ionicons
-            name='ios-qr-scanner'
+            name='ios-funnel-outline'
             size={ 26 }
             color='#e9e9e9'
           />
@@ -83,6 +85,7 @@ class LocationsView extends Component {
     );
 
     dispatch(fetchLocations());
+    dispatch(fetchTags());
     setParams({ handleModalFilter: () => this.setModalVisible()});
   }
 
@@ -159,6 +162,8 @@ class LocationsView extends Component {
   }
 
   renderFilterModal() {
+    const { isFetchingTags, tagsData } = this.props;
+
     return (
       <Modal
         animationType={'slide'}
@@ -167,7 +172,9 @@ class LocationsView extends Component {
         onRequestClose={() => {alert("Modal has been closed.")}} >
         <View style={ styles.modalContainer }>
           <View>
-            <Text>Hello World!</Text>
+            { tagsData.length > 0 ? tagsData.map((tag, index) => (
+              <Text style={ styles.modalTags }>{ tag.name }</Text>
+            )) : null }
             <Button
               onPress={() => { this.setModalVisible()}}
               title="Close Filter"
@@ -205,7 +212,10 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    backgroundColor: 'rgba(0, 0, 0, 0.7)'
+  },
+  modalTags: {
+    color: '#e9e9e9',
   },
   instructions: {
     textAlign: 'center',
@@ -239,9 +249,19 @@ const mapStateToProps = state => {
     locationsData: [],
   };
 
+  const {
+    isFetchingTags,
+    tagsData
+  } = locations.tagsData || {
+    isFetchingTags: false,
+    tagsData: [],
+  };
+
   return {
+    isFetchingTags,
     isFetchingLocations,
     locationsData,
+    tagsData,
   }
 }
 
