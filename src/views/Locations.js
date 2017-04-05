@@ -15,6 +15,7 @@ import MapView from 'react-native-maps';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { fetchLocations, fetchTags, requestLocations } from '../actions/locations-actions';
 import Loading from '../components/Global/Loading';
+import ModalFilter from '../components/modal-filter';
 
 const window = Dimensions.get('window');
 
@@ -58,7 +59,11 @@ class LocationsView extends Component {
       renderMap: false,
       locations: [],
       modalVisible: false,
+      selectedTags: [],
+      coords: null,
     };
+
+    this.filterByTags = this.filterByTags.bind(this);
   }
 
   componentDidMount() {
@@ -107,6 +112,7 @@ class LocationsView extends Component {
 
   filterLocations(coords) {
     const { locationsData, isFetchingLocations } = this.props;
+    const { selectedTags } = this.state;
 
     if (locationsData.length > 0 && coords) {
       const latMin = coords.latitude - coords.latitudeDelta;
@@ -121,13 +127,36 @@ class LocationsView extends Component {
           location.coordinate.longitude >= lonMin &&
           location.coordinate.longitude <= lonMax
         ) {
+          if (selectedTags.length > 0) {
+
+          }
           return location;
         }
       });
 
       console.log('---filteredLocations--', filteredLocations);
-      this.setState({locations: filteredLocations});
+      this.setState({
+        locations: filteredLocations,
+        coords: coords
+      });
     }
+  }
+
+  filterByTags(tagId) {
+    const { coords, selectedTags } = this.state;
+
+    if (selectedTags.includes(tagId)) {
+      const index = selectedTags.indexOf(tagId);
+      selectedTags.splice(index, 1);
+    } else {
+      selectedTags.push(tagId)
+    }
+
+    this.setState({
+      selectedTags: selectedTags
+    });
+
+    this.filterLocations(coords);
   }
 
   setModalVisible() {
@@ -136,8 +165,13 @@ class LocationsView extends Component {
   }
 
   render() {
-    const { isFetchingLocations } = this.props;
-    const { region, initialRegion, locations } = this.state;
+    const { isFetchingLocations, tagsData } = this.props;
+    const {
+      region,
+      initialRegion,
+      locations,
+      selectedTags,
+      modalVisible } = this.state;
 
     return (
       <View style={ styles.container }>
@@ -155,33 +189,14 @@ class LocationsView extends Component {
                 description={marker.address} />
             )) : null }
           </MapView> : null }
-        { this.renderFilterModal() }
+        <ModalFilter
+          tagsData={ tagsData }
+          filterByTags={ this.filterByTags }
+          selectedTags={ selectedTags }
+          setModalVisible={ () => { this.setModalVisible()} }
+          modalVisible={ modalVisible } />
         { isFetchingLocations ? <Loading /> : null }
       </View>
-    );
-  }
-
-  renderFilterModal() {
-    const { isFetchingTags, tagsData } = this.props;
-
-    return (
-      <Modal
-        animationType={'slide'}
-        transparent={true}
-        visible={this.state.modalVisible}
-        onRequestClose={() => {alert("Modal has been closed.")}} >
-        <View style={ styles.modalContainer }>
-          <View>
-            { tagsData.length > 0 ? tagsData.map((tag, index) => (
-              <Text style={ styles.modalTags }>{ tag.name }</Text>
-            )) : null }
-            <Button
-              onPress={() => { this.setModalVisible()}}
-              title="Close Filter"
-              color="#b22222" />
-          </View>
-        </View>
-      </Modal>
     );
   }
 }
@@ -212,7 +227,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)'
+    backgroundColor: 'rgba(0, 0, 0, 0.9)'
   },
   modalTags: {
     color: '#e9e9e9',

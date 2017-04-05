@@ -62,7 +62,12 @@ class RegisterView extends Component {
   }
 
   render() {
-    const { newCard, isRegistering, distributorsData } = this.props;
+    const {
+      newCard,
+      isRegistering,
+      distributorsData,
+      isFetchingDistributors
+    } = this.props;
 
     return (
       <View style={styles.container}>
@@ -97,7 +102,7 @@ class RegisterView extends Component {
             color="#b22222"
             accessibilityLabel="Learn more about purple" />
         </View>
-        { isRegistering ? <Loading /> : null }
+        { isRegistering || isFetchingDistributors ? <Loading /> : null }
       </View>
     );
   }
