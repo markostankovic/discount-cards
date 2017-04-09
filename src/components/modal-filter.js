@@ -33,11 +33,20 @@ class ModalFilter extends Component {
         visible={ modalVisible }
         onRequestClose={() => {alert("Modal has been closed.")}} >
         <ScrollView style={ styles.modalContainer }>
+          <View style={ styles.modalHeader }>
+            <TouchableHighlight onPress={ setModalVisible }>
+              <Ionicons
+                name='ios-close-circle-outline'
+                size={ 26 }
+                color='#e9e9e9'
+              />
+            </TouchableHighlight>
+          </View>
           { this.renderFilterOptions() }
           <Button
             onPress={ setModalVisible }
             title="Close Filter"
-            color="#b22222" />
+            color="#222222" />
         </ScrollView>
       </Modal>
     );
@@ -50,7 +59,6 @@ class ModalFilter extends Component {
       <View style={ styles.optionsWrapper }>
         { tagsData.length > 0 ? tagsData.map((tag, index) => {
           const selected = selectedTags.includes(tag.tagId);
-          const tagIcon = this.tagIcon(tag.tagId);
 
           return (
             <TouchableHighlight
@@ -59,7 +67,7 @@ class ModalFilter extends Component {
               onPress={() => this.handleTagClick(tag.tagId)}>
               <View style={ styles.filterOptionInner }>
                 <Ionicons
-                  name={ tagIcon }
+                  name={ tag.icon }
                   size={ 26 }
                   color={ selected ? '#222222' : '#e9e9e9' } />
                 <Text style={ [styles.modalTagsText, selected ? { color: '#222222' } : { color: '#e9e9e9' }] }>{ tag.name }</Text>
@@ -77,19 +85,6 @@ class ModalFilter extends Component {
 
     filterByTags(tagId);
   }
-
-  tagIcon(tagId) {
-    switch (tagId) {
-      case '8': //drink
-        return 'ios-beer'
-      case '7': //food
-        return 'ios-restaurant'
-      case '4': //night club
-        return 'ios-wine'
-      default:
-        return 'ios-funnel-outline'
-    }
-  }
 }
 
 const styles = StyleSheet.create({
@@ -101,18 +96,21 @@ const styles = StyleSheet.create({
     marginTop: 5
   },
   optionsWrapper: {
-    justifyContent: 'center',
+    flex: 1,
+    justifyContent: 'flex-start',
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   filterOptioin: {
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     margin: 0.5,
-    width: 100,
+    flexBasis: (window.width / 3) - 1,
+    width: (window.width / 3) - 1,
     height: 100,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    flexGrow: 0,
   },
   filterOptioinSelected: {
     backgroundColor: 'goldenrod',
@@ -123,6 +121,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  modalHeader: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    height: 50,
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    padding: 15,
   }
 });
 

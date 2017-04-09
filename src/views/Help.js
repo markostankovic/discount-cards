@@ -11,11 +11,9 @@ import {
   TouchableHighlight,
   StatusBar,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import BottomNavbar from '../components/global/bottom-navbar';
 import Header from '../components/global/header';
 
-class MainView extends Component {
+class HelpView extends Component {
   static propTypes = {
     navigator: PropTypes.object.isRequired,
     routes: PropTypes.array.isRequired,
@@ -30,14 +28,9 @@ class MainView extends Component {
           backgroundColor='#2d2d2d'
           barStyle='light-content' />
         <Header
-          headerTitle='Easy Card Discount'
+          headerTitle='Help'
           navigator={ navigator }
-          routes={ routes }
-          rightButton={{
-            icon: 'ios-cloud-upload-outline',
-            text: '',
-            handleButtonClick: () => { navigator.jumpTo(routes[3]) }
-          }} />
+          routes={ routes } />
       </View>
     );
   }
@@ -82,4 +75,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MainView;
+export default HelpView;

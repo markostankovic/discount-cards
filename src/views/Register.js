@@ -14,7 +14,9 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { registerNewDiscountCard } from '../actions/discount-cards-actions';
 import { fetchAllDistributors } from '../actions/distributors-actions';
-import Loading from '../components/Global/Loading';
+import Loading from '../components/global/Loading';
+import BottomNavbar from '../components/global/bottom-navbar';
+import Header from '../components/global/header';
 
 class RegisterView extends Component {
   static propTypes = {
@@ -23,24 +25,14 @@ class RegisterView extends Component {
     isFetchingDistributors: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     distributorsData: PropTypes.array,
+    navigator: PropTypes.object.isRequired,
+    routes: PropTypes.array.isRequired,
   }
-
-  static navigationOptions = {
-    header: (navigation, defaultHeader) => ({
-      ...defaultHeader,
-      visible: true,
-      title: 'Register New Discount Card',
-      style: {
-        backgroundColor: '#222222',
-      },
-      tintColor: '#e9e9e9',
-    }),
-  };
 
   constructor(props) {
     super(props);
     this._listener = null;
-    this.state = { selectedDistributor: null };
+    this.state = { selectedDistributor: 1 };
   }
 
   componentDidMount(){
@@ -66,43 +58,50 @@ class RegisterView extends Component {
       newCard,
       isRegistering,
       distributorsData,
-      isFetchingDistributors
+      isFetchingDistributors,
+      navigator,
+      routes,
     } = this.props;
 
     return (
-      <View style={styles.container}>
-        <View style={styles.contentWrapper}>
-          <Text style={styles.indicatorWrapper}>
-            { !newCard ?
-              <Ionicons
-                name='ios-cloud-upload-outline'
-                size={ 100 }
-                color='#808080' /> :
-              <Ionicons
-                name='ios-cloud-upload'
-                size={ 100 }
-                color='#008000' /> }
-          </Text>
-          <View style={styles.pickerWrapper}>
-            <Picker
-              style={styles.distributorPicker}
-              selectedValue={this.state.selectedDistributor}
-              onValueChange={(distributorId) => this.setState({selectedDistributor: distributorId})}>
-              <Picker.Item key={ 0 } label='Select Distributor' value={ null } />
-              { distributorsData ? distributorsData.map((distributor, index) => {
-                return (
-                  <Picker.Item key={ index + 1 } label={ distributor.name } value={ distributor.distributorId } />
-                );
-              }) : null }
-            </Picker>
+      <View style={styles.wrapper}>
+        <Header headerTitle='Register New Discount Card' />
+        <View style={styles.container}>
+          <View style={styles.contentWrapper}>
+            <Text style={styles.indicatorWrapper}>
+              { !newCard ?
+                <Ionicons
+                  name='ios-cloud-upload-outline'
+                  size={ 100 }
+                  color='#808080' /> :
+                <Ionicons
+                  name='ios-cloud-upload'
+                  size={ 100 }
+                  color='#008000' /> }
+            </Text>
+            { distributorsData.length > 0 ?
+              <View style={styles.pickerWrapper}>
+                <Picker
+                  style={styles.distributorPicker}
+                  selectedValue={this.state.selectedDistributor}
+                  onValueChange={(distributorId) => this.setState({selectedDistributor: distributorId})}>
+                  {/*<Picker.Item key={ 0 } label='Select Distributor' value='' />*/}
+                  { distributorsData.map((distributor, index) => {
+                    return (
+                      <Picker.Item key={ index } label={ distributor.name } value={ distributor.distributorId } />
+                    );
+                  }) }
+                </Picker>
+              </View> : null }
+            <Button
+              onPress={ () => this.onButtonPress() }
+              title="Simulate Register"
+              color="#b22222"
+              accessibilityLabel="Learn more about purple" />
           </View>
-          <Button
-            onPress={ () => this.onButtonPress() }
-            title="Simulate Register"
-            color="#b22222"
-            accessibilityLabel="Learn more about purple" />
+          { isRegistering || isFetchingDistributors ? <Loading /> : null }
         </View>
-        { isRegistering || isFetchingDistributors ? <Loading /> : null }
+
       </View>
     );
   }
@@ -116,6 +115,10 @@ class RegisterView extends Component {
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    paddingBottom: 50,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',

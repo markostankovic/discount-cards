@@ -14,8 +14,10 @@ import {
 import MapView from 'react-native-maps';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { fetchLocations, fetchTags, requestLocations } from '../actions/locations-actions';
-import Loading from '../components/Global/Loading';
+import Loading from '../components/global/Loading';
 import ModalFilter from '../components/modal-filter';
+import BottomNavbar from '../components/global/bottom-navbar';
+import Header from '../components/global/header';
 
 const window = Dimensions.get('window');
 
@@ -26,29 +28,31 @@ class LocationsView extends Component {
     dispatch: PropTypes.func.isRequired,
     locationsData: PropTypes.array,
     tagsData: PropTypes.array,
+    navigator: PropTypes.object.isRequired,
+    routes: PropTypes.array.isRequired,
   }
 
-  static navigationOptions = {
-    title: 'Locations',
-    header: (navigation, defaultHeader) => ({
-      ...defaultHeader,
-      visible: true,
-      title: 'Locations',
-      style: {
-        backgroundColor: '#222222',
-      },
-      tintColor: '#e9e9e9',
-      right: (
-        <TouchableHighlight style={{ padding: 15 }} onPress={() => navigation.state.params.handleModalFilter()}>
-          <Ionicons
-            name='ios-funnel-outline'
-            size={ 26 }
-            color='#e9e9e9'
-          />
-        </TouchableHighlight>
-      ),
-    }),
-  };
+  // static navigationOptions = {
+  //   title: 'Locations',
+  //   header: (navigation, defaultHeader) => ({
+  //     ...defaultHeader,
+  //     visible: true,
+  //     title: 'Locations',
+  //     style: {
+  //       backgroundColor: '#222222',
+  //     },
+  //     tintColor: '#e9e9e9',
+  //     right: (
+  //       <TouchableHighlight style={{ padding: 15 }} onPress={() => navigation.state.params.handleModalFilter()}>
+  //         <Ionicons
+  //           name='ios-funnel-outline'
+  //           size={ 26 }
+  //           color='#e9e9e9'
+  //         />
+  //       </TouchableHighlight>
+  //     ),
+  //   }),
+  // };
 
   constructor(props) {
     super(props);
@@ -69,7 +73,7 @@ class LocationsView extends Component {
   componentDidMount() {
     const {
       dispatch,
-      navigation: { setParams }
+      // navigation: { setParams }
     } = this.props;
 
     navigator.geolocation.getCurrentPosition(
@@ -91,7 +95,7 @@ class LocationsView extends Component {
 
     dispatch(fetchLocations());
     dispatch(fetchTags());
-    setParams({ handleModalFilter: () => this.setModalVisible()});
+    // setParams({ handleModalFilter: () => this.setModalVisible()});
   }
 
   componentWillReceiveProps(nextProps) {
@@ -128,13 +132,24 @@ class LocationsView extends Component {
           location.coordinate.longitude <= lonMax
         ) {
           if (selectedTags.length > 0) {
+            let renderLocation = false;
 
+            location.tags.forEach(locationTag => {
+              if (selectedTags.includes(locationTag)) {
+                renderLocation = true;
+              }
+            });
+
+            if (renderLocation) {
+              return location;
+            } else {
+              return;
+            }
           }
           return location;
         }
       });
 
-      console.log('---filteredLocations--', filteredLocations);
       this.setState({
         locations: filteredLocations,
         coords: coords
@@ -165,50 +180,70 @@ class LocationsView extends Component {
   }
 
   render() {
-    const { isFetchingLocations, tagsData } = this.props;
+    const {
+      isFetchingLocations,
+      tagsData,
+      navigator,
+      routes
+    } = this.props;
     const {
       region,
       initialRegion,
       locations,
       selectedTags,
-      modalVisible } = this.state;
+      modalVisible
+    } = this.state;
 
     return (
-      <View style={ styles.container }>
-        { initialRegion || region ?
-          <MapView
-            style={ styles.mapWrapper }
-            showsUserLocation={ true }
-            region={ region ? region : initialRegion }
-            onRegionChangeComplete={ (regionCoords) => this.onRegionChange(regionCoords)} >
-            { locations.length > 0 ? locations.map((marker, index) => (
-              <MapView.Marker
-                key={ index }
-                coordinate={marker.coordinate}
-                title={marker.name}
-                description={marker.address} />
-            )) : null }
-          </MapView> : null }
-        <ModalFilter
-          tagsData={ tagsData }
-          filterByTags={ this.filterByTags }
-          selectedTags={ selectedTags }
-          setModalVisible={ () => { this.setModalVisible()} }
-          modalVisible={ modalVisible } />
-        { isFetchingLocations ? <Loading /> : null }
+      <View style={ styles.wrapper }>
+        <Header
+          headerTitle='Locations'
+          rightButton={{
+            icon: 'ios-funnel-outline',
+            text: '',
+            handleButtonClick: () => this.setModalVisible()
+          }}
+        />
+        <View style={ styles.container }>
+          { initialRegion || region ?
+            <MapView
+              style={ styles.mapWrapper }
+              showsUserLocation={ true }
+              region={ region ? region : initialRegion }
+              onRegionChangeComplete={ (regionCoords) => this.onRegionChange(regionCoords)} >
+              { locations.length > 0 ? locations.map((marker, index) => (
+                <MapView.Marker
+                  key={ index }
+                  coordinate={marker.coordinate}
+                  title={marker.name}
+                  description={marker.address} />
+              )) : null }
+            </MapView> : null }
+          <ModalFilter
+            tagsData={ tagsData }
+            filterByTags={ this.filterByTags }
+            selectedTags={ selectedTags }
+            setModalVisible={ () => { this.setModalVisible()} }
+            modalVisible={ modalVisible } />
+          { isFetchingLocations ? <Loading /> : null }
+        </View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    paddingBottom: 50,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'whitesmoke'
+    backgroundColor: 'whitesmoke',
   },
   mapWrapper: {
-    height: window.height - 80,
+    height: window.height - 120,
     position: 'absolute',
     left: 0,
     top: 0,

@@ -11,11 +11,19 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 class Header extends Component {
   static PropTypes = {
     leftButtonText: PropTypes.string,
+    headerTitle: PropTypes.string,
     navigator: PropTypes.object,
+    routes: PropTypes.array,
+    rightButton: PropTypes.object,
   }
 
   render() {
-    const { leftButtonText, navigator } = this.props;
+    const {
+      leftButtonText,
+      navigator,
+      headerTitle,
+      rightButton
+    } = this.props;
 
     return (
       <View style={ styles.headerContainer }>
@@ -25,27 +33,30 @@ class Header extends Component {
               <Icon
                 name='arrow-back'
                 size={ 20 }
-                color='#fff'
+                color='#e9e9e9'
                 style={ styles.headerLogo } />
               <Text style={styles.textStyle}>{ leftButtonText }</Text>
             </View>
           </TouchableHighlight> :
           <TouchableHighlight>
             <View style={ styles.headerLeftButton }>
-              <Icon
-                name='layers'
+              <Ionicons
+                name='ios-pricetags'
                 size={ 20 }
-                color='#fff'
+                color='#b22222'
                 style={ styles.headerLogo } />
-              <Text style={styles.textStyle}>Flashcards</Text>
+              <Text style={styles.textStyle}>{ headerTitle }</Text>
             </View>
           </TouchableHighlight> }
-        <TouchableHighlight>
-          <Ionicons
-            name='ios-qr-scanner'
-            size={ 25 }
-            color='#fff' />
-        </TouchableHighlight>
+        { rightButton ?
+          <TouchableHighlight style={ styles.sideButtonWrapper } onPress={ rightButton.handleButtonClick }>
+            <View style={ styles.sideButton }>
+              <Ionicons
+                name={ rightButton.icon }
+                size={ 25 }
+                color='#e9e9e9' />
+            </View>
+          </TouchableHighlight> : null }
       </View>
     );
   }
@@ -54,11 +65,10 @@ class Header extends Component {
 const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 15,
     justifyContent: 'space-between',
     backgroundColor: '#222222',
-    height: 40,
+    height: 50,
     alignItems: 'center'
   },
   headerLeftButton: {
@@ -68,7 +78,14 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   textStyle: {
-    color: 'white'
+    color: 'white',
+    fontSize: 16
+  },
+  sideButtonWrapper: {
+    padding: 15,
+  },
+  sideButton: {
+    // color: 'white'
   }
 });
 

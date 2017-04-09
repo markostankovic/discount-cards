@@ -12,13 +12,17 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { fetchCode, updateDiscountCard } from '../actions/discount-cards-actions';
-import Loading from '../components/Global/Loading';
+import Loading from '../components/global/Loading';
+import BottomNavbar from '../components/global/bottom-navbar';
+import Header from '../components/global/header';
 
 class ScanView extends Component {
   static propTypes = {
     cardData: PropTypes.object,
     isFetching: PropTypes.bool.isRequired,
-    dispatch: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired,
+    navigator: PropTypes.object.isRequired,
+    routes: PropTypes.array.isRequired,
   }
 
   static navigationOptions = {
@@ -61,20 +65,23 @@ class ScanView extends Component {
   }
 
   render() {
-    const { cardData, isFetching } = this.props;
+    const { cardData, isFetching, navigator, routes } = this.props;
 
     return (
-      <View style={styles.container}>
-        <View style={styles.contentWrapper}>
-          { this.renderCardState(cardData ? cardData : null) }
-          <Button
-            onPress={ () => this.onButtonPress() }
-            title="Simulate Scan"
-            color="#b22222"
-            accessibilityLabel="Learn more about purple"
-          />
+      <View style={styles.wrapper}>
+        <Header headerTitle='Scan' />
+        <View style={styles.container}>
+          <View style={styles.contentWrapper}>
+            { this.renderCardState(cardData ? cardData : null) }
+            <Button
+              onPress={ () => this.onButtonPress() }
+              title="Simulate Scan"
+              color="#b22222"
+              accessibilityLabel="Learn more about purple"
+            />
+          </View>
+          { isFetching ? <Loading /> : null }
         </View>
-        { isFetching ? <Loading /> : null }
       </View>
     );
   }
@@ -125,6 +132,10 @@ class ScanView extends Component {
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    paddingBottom: 50,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
