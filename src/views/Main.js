@@ -10,10 +10,14 @@ import {
   View,
   TouchableHighlight,
   StatusBar,
+  Image,
+  Dimensions,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BottomNavbar from '../components/global/bottom-navbar';
 import Header from '../components/global/header';
+
+const window = Dimensions.get('window');
 
 class MainView extends Component {
   static propTypes = {
@@ -38,6 +42,49 @@ class MainView extends Component {
             text: '',
             handleButtonClick: () => { navigator.jumpTo(routes[3]) }
           }} />
+        { this.renderMainMenu() }
+      </View>
+    );
+  }
+
+  renderMainMenu() {
+    const { navigator, routes } = this.props;
+
+    return (
+      <View style={ styles.mainMenuWrapper }>
+        <TouchableHighlight
+          style={ [styles.mainMenuButton, { backgroundColor: 'cadetblue' }] }
+          onPress={() => { navigator.jumpTo(routes[1]) }}>
+          <View style={ styles.mainMenuButtonInner }>
+            <Ionicons
+              name='ios-pin'
+              size={ 26 }
+              color='#e9e9e9' />
+            <Text style={ styles.mainMenuButtonText }>Locations</Text>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={ [styles.mainMenuButton, { backgroundColor: 'chocolate' }] }
+          onPress={() => { navigator.jumpTo(routes[2]) }}>
+          <View style={ styles.mainMenuButtonInner }>
+            <Ionicons
+              name='ios-qr-scanner'
+              size={ 26 }
+              color='#e9e9e9' />
+            <Text style={ styles.mainMenuButtonText }>Scan</Text>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={ [styles.mainMenuButton, { backgroundColor: 'goldenrod' }] }
+          onPress={() => { navigator.jumpTo(routes[4]) }}>
+          <View style={ styles.mainMenuButtonInner }>
+            <Ionicons
+              name='ios-help-buoy'
+              size={ 26 }
+              color='#e9e9e9' />
+            <Text style={ styles.mainMenuButtonText }>Help</Text>
+          </View>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -47,6 +94,34 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     paddingBottom: 50,
+    // backgroundColor: '#b22222'
+  },
+  mainMenuWrapper: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  mainMenuButton: {
+    margin: 0.5,
+    flexBasis: (window.width / 3) - 1,
+    width: (window.width / 3) - 1,
+    height: 100,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexGrow: 0,
+    backgroundColor: '#b22222',
+  },
+  mainMenuButtonInner: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mainMenuButtonText: {
+    color: 'white',
+    textAlign: 'center',
+    marginTop: 10
   },
   container: {
     flex: 1,

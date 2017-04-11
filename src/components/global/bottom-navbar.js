@@ -15,15 +15,16 @@ class BottomNavbar extends Component {
   static PropTypes = {
     navigator: PropTypes.object.isRequired,
     routes: PropTypes.array.isRequired,
+    activeViewIndex: PropTypes.number,
   }
 
   render() {
-    const { navigator, routes } = this.props;
+    const { navigator, routes, activeViewIndex } = this.props;
 
     return (
       <View style={ styles.bottomNavbar }>
         <TouchableHighlight
-          style={ styles.navbarButton }
+          style={ [styles.navbarButton, activeViewIndex === 0 ? styles.activeButton : null ] }
           onPress={() => { navigator.jumpTo(routes[0]) }}>
           <View style={ styles.navbarButtonInner }>
             <Ionicons
@@ -34,7 +35,7 @@ class BottomNavbar extends Component {
           </View>
         </TouchableHighlight>
         <TouchableHighlight
-          style={ styles.navbarButton }
+          style={ [styles.navbarButton, activeViewIndex === 1 ? styles.activeButton : null ] }
           onPress={() => { navigator.jumpTo(routes[1]) }}>
           <View style={ styles.navbarButtonInner }>
             <Ionicons
@@ -45,7 +46,7 @@ class BottomNavbar extends Component {
           </View>
         </TouchableHighlight>
         <TouchableHighlight
-          style={ styles.navbarButton }
+          style={ [styles.navbarButton, activeViewIndex === 2 ? styles.activeButton : null ] }
           onPress={() => { navigator.jumpTo(routes[2]) }}>
           <View style={ styles.navbarButtonInner }>
             <Ionicons
@@ -56,7 +57,7 @@ class BottomNavbar extends Component {
           </View>
         </TouchableHighlight>
         <TouchableHighlight
-          style={ styles.navbarButton }
+          style={ [styles.navbarButton, activeViewIndex === 4 ? styles.activeButton : null ] }
           onPress={() => { navigator.jumpTo(routes[4]) }}>
           <View style={ styles.navbarButtonInner }>
             <Ionicons
@@ -66,17 +67,6 @@ class BottomNavbar extends Component {
             <Text style={ styles.navbarText }>Help</Text>
           </View>
         </TouchableHighlight>
-        {/*<TouchableHighlight*/}
-          {/*style={ styles.navbarButton }*/}
-          {/*onPress={() => { navigator.jumpTo(routes[0]) }}>*/}
-          {/*<View style={ styles.navbarButtonInner }>*/}
-            {/*<Ionicons*/}
-              {/*name='ios-help-buoy'*/}
-              {/*size={ 26 }*/}
-              {/*color='#e9e9e9' />*/}
-            {/*<Text style={ styles.navbarText }>Help</Text>*/}
-          {/*</View>*/}
-        {/*</TouchableHighlight>*/}
       </View>
     );
   }
@@ -99,6 +89,9 @@ const styles = StyleSheet.create({
   navbarButton: {
     width: window.width / 4,
     height: 50
+  },
+  activeButton: {
+    backgroundColor: '#b22222',
   },
   navbarButtonInner: {
     flex: 1,

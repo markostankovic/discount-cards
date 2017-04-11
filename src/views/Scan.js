@@ -73,12 +73,12 @@ class ScanView extends Component {
         <View style={styles.container}>
           <View style={styles.contentWrapper}>
             { this.renderCardState(cardData ? cardData : null) }
-            <Button
-              onPress={ () => this.onButtonPress() }
-              title="Simulate Scan"
-              color="#b22222"
-              accessibilityLabel="Learn more about purple"
-            />
+            {/*<Button*/}
+              {/*onPress={ () => this.onButtonPress() }*/}
+              {/*title="Simulate Scan"*/}
+              {/*color="#b22222"*/}
+              {/*accessibilityLabel="Learn more about purple"*/}
+            {/*/>*/}
           </View>
           { isFetching ? <Loading /> : null }
         </View>

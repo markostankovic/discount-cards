@@ -1,32 +1,94 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
-  AppRegistry,
-  Platform,
+  StyleSheet,
   Text,
+  View,
+  Navigator
 } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+
 import MainView from '../views/Main';
-import ScanView from '../views/Scan';
-import TestView from '../views/Test';
-import RegisterView from '../views/Register';
 import LocationsView from '../views/Locations';
+import ScanView from '../views/Scan';
+import RegisterView from '../views/Register';
+import HelpView from '../views/Help';
+import BottomNavbar from '../components/global/bottom-navbar';
 
-const AppNavigator = StackNavigator({
-  Index: { screen: MainView },
-  Scan: { screen: ScanView },
-  Test: { screen: TestView },
-  Register: { screen: RegisterView },
-  Locations: { screen: LocationsView },
-}, {
-  initialRouteName: 'Index',
+const routes = [
+  {
+    index: 0,
+    view: MainView
+  },
+  {
+    index: 1,
+    view: LocationsView
+  },
+  {
+    index: 2,
+    view: ScanView
+  },
+  {
+    index: 3,
+    view: RegisterView
+  },
+  {
+    index: 4,
+    view: HelpView
+  },
+];
 
-  /*
-   * Use modal on iOS because the card mode comes from the right,
-   * which conflicts with the drawer example gesture
-   */
-  mode: Platform.OS === 'ios' ? 'modal' : 'card',
+class SceneComponent extends Component {
+  static propTypes = {
+    view: PropTypes.func.isRequired,
+    navigator: PropTypes.object.isRequired,
+    routes: PropTypes.array.isRequired,
+    index: PropTypes.number,
+  }
+
+  render() {
+    const SceneView = this.props.view;
+    const {navigator, routes, index} = this.props;
+
+    return (
+      <View style={ styles.wrapper }>
+        <SceneView navigator={ navigator } routes={ routes } />
+        <BottomNavbar
+          navigator={ navigator }
+          activeViewIndex={ index }
+          routes={ routes } />
+      </View>
+    )
+  }
+}
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'whitesmoke'
+  },
 });
 
-export default () => <AppNavigator />;
-
-// AppRegistry.registerComponent('App', () => App);
+export default class AppNavigator extends Component {
+  render() {
+    return (
+      <Navigator
+        initialRoute={routes[0]}
+        initialRouteStack={routes}
+        renderScene={(route, navigator) =>
+          <SceneComponent
+            key={ route.index }
+            view={ route.view }
+            index={ route.index }
+            navigator={ navigator }
+            routes={ routes } />
+        }
+        configureScene={(route, routeStack) =>
+          Navigator.SceneConfigs.FadeAndroid}
+      />
+    );
+  }
+}

@@ -32,28 +32,6 @@ class LocationsView extends Component {
     routes: PropTypes.array.isRequired,
   }
 
-  // static navigationOptions = {
-  //   title: 'Locations',
-  //   header: (navigation, defaultHeader) => ({
-  //     ...defaultHeader,
-  //     visible: true,
-  //     title: 'Locations',
-  //     style: {
-  //       backgroundColor: '#222222',
-  //     },
-  //     tintColor: '#e9e9e9',
-  //     right: (
-  //       <TouchableHighlight style={{ padding: 15 }} onPress={() => navigation.state.params.handleModalFilter()}>
-  //         <Ionicons
-  //           name='ios-funnel-outline'
-  //           size={ 26 }
-  //           color='#e9e9e9'
-  //         />
-  //       </TouchableHighlight>
-  //     ),
-  //   }),
-  // };
-
   constructor(props) {
     super(props);
 
@@ -79,10 +57,10 @@ class LocationsView extends Component {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const initialRegion = {
-          // latitude: position.coords.latitude,
-          // longitude: position.coords.longitude,
-          latitude: 44.81755481,
-          longitude: 20.45967579,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          // latitude: 44.81755481,
+          // longitude: 20.45967579,
           latitudeDelta: 0.02,
           longitudeDelta: 0.02,
         };

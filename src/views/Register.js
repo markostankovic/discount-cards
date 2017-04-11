@@ -93,11 +93,11 @@ class RegisterView extends Component {
                   }) }
                 </Picker>
               </View> : null }
-            <Button
-              onPress={ () => this.onButtonPress() }
-              title="Simulate Register"
-              color="#b22222"
-              accessibilityLabel="Learn more about purple" />
+            {/*<Button*/}
+              {/*onPress={ () => this.onButtonPress() }*/}
+              {/*title="Simulate Register"*/}
+              {/*color="#b22222"*/}
+              {/*accessibilityLabel="Learn more about purple" />*/}
           </View>
           { isRegistering || isFetchingDistributors ? <Loading /> : null }
         </View>
