@@ -42,7 +42,22 @@ class MainView extends Component {
             text: '',
             handleButtonClick: () => { navigator.jumpTo(routes[3]) }
           }} />
-        { this.renderMainMenu() }
+
+        <View style={styles.contentWrapper}>
+          <Image source={ require('../images/traveler.jpg') } style={styles.backgroundImage}>
+            <View style={ styles.imageContent }>
+              <View style={ styles.textWrapper }>
+                <Text style={ styles.contentText }>You don’t have to be rich to travel well.</Text>
+                <Text style={ styles.contentSmallText }></Text>
+                <Ionicons
+                  name='ios-happy-outline'
+                  size={ 80 }
+                  color='#cdcdcd' />
+              </View>
+              { this.renderMainMenu() }
+            </View>
+          </Image>
+        </View>
       </View>
     );
   }
@@ -53,7 +68,7 @@ class MainView extends Component {
     return (
       <View style={ styles.mainMenuWrapper }>
         <TouchableHighlight
-          style={ [styles.mainMenuButton, { backgroundColor: 'cadetblue' }] }
+          style={ [styles.mainMenuButton, { borderColor: 'chocolate', }] }
           onPress={() => { navigator.jumpTo(routes[1]) }}>
           <View style={ styles.mainMenuButtonInner }>
             <Ionicons
@@ -64,7 +79,7 @@ class MainView extends Component {
           </View>
         </TouchableHighlight>
         <TouchableHighlight
-          style={ [styles.mainMenuButton, { backgroundColor: 'chocolate' }] }
+          style={ [styles.mainMenuButton, { borderColor: 'goldenrod', }] }
           onPress={() => { navigator.jumpTo(routes[2]) }}>
           <View style={ styles.mainMenuButtonInner }>
             <Ionicons
@@ -75,7 +90,7 @@ class MainView extends Component {
           </View>
         </TouchableHighlight>
         <TouchableHighlight
-          style={ [styles.mainMenuButton, { backgroundColor: 'goldenrod' }] }
+          style={ [styles.mainMenuButton, { borderColor: 'cadetblue', }] }
           onPress={() => { navigator.jumpTo(routes[4]) }}>
           <View style={ styles.mainMenuButtonInner }>
             <Ionicons
@@ -93,25 +108,37 @@ class MainView extends Component {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    paddingBottom: 50,
+    alignItems: 'stretch',
     // backgroundColor: '#b22222'
+  },
+  contentWrapper: {
+    flex: 1,
+    height: (window.height) - 50,
   },
   mainMenuWrapper: {
     flex: 1,
-    justifyContent: 'flex-start',
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    height: 100,
+    maxHeight: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+    width: window.width,
   },
   mainMenuButton: {
-    margin: 0.5,
-    flexBasis: (window.width / 3) - 1,
-    width: (window.width / 3) - 1,
+    // flexBasis: (window.width / 3) - 20,
+    // width: (window.width / 3) - 20,
+    flexBasis: 100,
+    width: 100,
     height: 100,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     flexGrow: 0,
-    backgroundColor: '#b22222',
+    borderWidth: 2,
+    borderColor: '#b22222',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    margin: 10,
   },
   mainMenuButtonInner: {
     flex: 1,
@@ -155,6 +182,40 @@ const styles = StyleSheet.create({
     width: window.width,
     backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    height: window.height,
+    width: window.width,
+  },
+  imageContent: {
+    flex: 1,
+    backgroundColor:'rgba(0, 0, 0, 0.5)',
+    alignItems: 'center',
+  },
+  textWrapper: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  contentText: {
+    color: 'white',
+    fontSize: 40,
+    textAlign: 'center',
+    padding: 20,
+    opacity: 0.9,
+    fontFamily: 'sans-serif-medium',
+    fontWeight: 'bold',
+  },
+  contentSmallText: {
+    color: 'white',
+    fontSize: 40,
+    textAlign: 'center',
+    padding: 20,
+    opacity: 0.9,
+    borderTopWidth: 1,
+    borderColor: '#fff',
+    width: (window.width / 2),
+  }
 });
 
 export default MainView;

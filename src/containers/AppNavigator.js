@@ -51,10 +51,10 @@ class SceneComponent extends Component {
     return (
       <View style={ styles.wrapper }>
         <SceneView navigator={ navigator } routes={ routes } />
-        <BottomNavbar
+        { index !== 0 ? <BottomNavbar
           navigator={ navigator }
           activeViewIndex={ index }
-          routes={ routes } />
+          routes={ routes } /> : null }
       </View>
     )
   }
