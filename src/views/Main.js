@@ -34,7 +34,7 @@ class MainView extends Component {
           backgroundColor='#2d2d2d'
           barStyle='light-content' />
         <Header
-          headerTitle='Easy Card Discount'
+          headerTitle='Easy Pass'
           navigator={ navigator }
           routes={ routes }
           rightButton={{
@@ -42,7 +42,6 @@ class MainView extends Component {
             text: '',
             handleButtonClick: () => { navigator.jumpTo(routes[3]) }
           }} />
-
         <View style={styles.contentWrapper}>
           <Image source={ require('../images/traveler.jpg') } style={styles.backgroundImage}>
             <View style={ styles.imageContent }>

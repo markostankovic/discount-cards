@@ -67,7 +67,7 @@ class LocationsView extends Component {
 
         this.onRegionChange(null, initialRegion);
       },
-      (error) => alert(error.message),
+      (error) => alert(JSON.stringify(error)),
       {enableHighAccuracy: true, timeout: 10000}
     );
 
