@@ -25,7 +25,7 @@ class BottomNavbar extends Component {
       <View style={ styles.bottomNavbar }>
         <TouchableHighlight
           style={ [styles.navbarButton, activeViewIndex === 0 ? styles.activeButton : null ] }
-          onPress={() => { navigator.jumpTo(routes[0]) }}>
+          onPress={() => { navigator.immediatelyResetRouteStack([routes[0]]) }}>
           <View style={ styles.navbarButtonInner }>
             <Ionicons
               name='ios-home'
@@ -36,7 +36,7 @@ class BottomNavbar extends Component {
         </TouchableHighlight>
         <TouchableHighlight
           style={ [styles.navbarButton, activeViewIndex === 1 ? styles.activeButton : null ] }
-          onPress={() => { navigator.jumpTo(routes[1]) }}>
+          onPress={() => { navigator.immediatelyResetRouteStack([routes[1]]) }}>
           <View style={ styles.navbarButtonInner }>
             <Ionicons
               name='ios-pin'
@@ -47,7 +47,7 @@ class BottomNavbar extends Component {
         </TouchableHighlight>
         <TouchableHighlight
           style={ [styles.navbarButton, activeViewIndex === 2 ? styles.activeButton : null ] }
-          onPress={() => { navigator.jumpTo(routes[2]) }}>
+          onPress={() => { navigator.immediatelyResetRouteStack([routes[2]]) }}>
           <View style={ styles.navbarButtonInner }>
             <Ionicons
               name='ios-qr-scanner'
@@ -58,7 +58,7 @@ class BottomNavbar extends Component {
         </TouchableHighlight>
         <TouchableHighlight
           style={ [styles.navbarButton, activeViewIndex === 4 ? styles.activeButton : null ] }
-          onPress={() => { navigator.jumpTo(routes[4]) }}>
+          onPress={() => { navigator.immediatelyResetRouteStack([routes[4]]) }}>
           <View style={ styles.navbarButtonInner }>
             <Ionicons
               name='ios-help-buoy'

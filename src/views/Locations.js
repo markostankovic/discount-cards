@@ -68,7 +68,7 @@ class LocationsView extends Component {
         this.onRegionChange(null, initialRegion);
       },
       (error) => alert(JSON.stringify(error)),
-      {enableHighAccuracy: true, timeout: 10000}
+      {enableHighAccuracy: true, timeout: 20000}
     );
 
     dispatch(fetchLocations());

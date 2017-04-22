@@ -77,9 +77,11 @@ export default class AppNavigator extends Component {
     return (
       <Navigator
         initialRoute={routes[0]}
-        initialRouteStack={routes}
+        initialRouteStack={[routes[0]]}
+        type='replace'
         renderScene={(route, navigator) =>
           <SceneComponent
+            type='replace'
             key={ route.index }
             view={ route.view }
             index={ route.index }

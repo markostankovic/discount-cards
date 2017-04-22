@@ -40,7 +40,7 @@ class MainView extends Component {
           rightButton={{
             icon: 'ios-cloud-upload-outline',
             text: '',
-            handleButtonClick: () => { navigator.jumpTo(routes[3]) }
+            handleButtonClick: () => { navigator.immediatelyResetRouteStack([routes[3]]) }
           }} />
         <View style={styles.contentWrapper}>
           <Image source={ require('../images/traveler.jpg') } style={styles.backgroundImage}>
@@ -68,7 +68,7 @@ class MainView extends Component {
       <View style={ styles.mainMenuWrapper }>
         <TouchableHighlight
           style={ [styles.mainMenuButton, { borderColor: 'chocolate', }] }
-          onPress={() => { navigator.jumpTo(routes[1]) }}>
+          onPress={() => { navigator.immediatelyResetRouteStack([routes[1]]) }}>
           <View style={ styles.mainMenuButtonInner }>
             <Ionicons
               name='ios-pin'
@@ -79,7 +79,7 @@ class MainView extends Component {
         </TouchableHighlight>
         <TouchableHighlight
           style={ [styles.mainMenuButton, { borderColor: 'goldenrod', }] }
-          onPress={() => { navigator.jumpTo(routes[2]) }}>
+          onPress={() => { navigator.immediatelyResetRouteStack([routes[2]]) }}>
           <View style={ styles.mainMenuButtonInner }>
             <Ionicons
               name='ios-qr-scanner'
@@ -90,7 +90,7 @@ class MainView extends Component {
         </TouchableHighlight>
         <TouchableHighlight
           style={ [styles.mainMenuButton, { borderColor: 'cadetblue', }] }
-          onPress={() => { navigator.jumpTo(routes[4]) }}>
+          onPress={() => { navigator.immediatelyResetRouteStack([routes[4]]) }}>
           <View style={ styles.mainMenuButtonInner }>
             <Ionicons
               name='ios-help-buoy'
