@@ -15,12 +15,14 @@ class Header extends Component {
     navigator: PropTypes.object,
     routes: PropTypes.array,
     rightButton: PropTypes.object,
+    leftIcon: PropTypes.object,
   }
 
   render() {
     const {
       leftButtonText,
       navigator,
+      leftIcon,
       headerTitle,
       rightButton
     } = this.props;
@@ -40,11 +42,17 @@ class Header extends Component {
           </TouchableHighlight> :
           <TouchableHighlight>
             <View style={ styles.headerLeftButton }>
-              <Ionicons
-                name='ios-pricetags'
-                size={ 20 }
-                color='#b22222'
-                style={ styles.headerLogo } />
+              { leftIcon ?
+                <Ionicons
+                  name={ leftIcon.icon }
+                  size={ 20 }
+                  color={ leftIcon.color ? leftIcon.color : '#b22222' }
+                  style={ styles.headerLogo } /> :
+                <Ionicons
+                  name='ios-pricetags'
+                  size={ 20 }
+                  color='#b22222'
+                  style={ styles.headerLogo } /> }
               <Text style={styles.textStyle}>{ headerTitle }</Text>
             </View>
           </TouchableHighlight> }

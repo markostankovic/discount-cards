@@ -16,6 +16,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { fetchLocations, fetchTags, requestLocations } from '../actions/locations-actions';
 import Loading from '../components/global/Loading';
 import ModalFilter from '../components/modal-filter';
+import ModalLocation from '../components/modal-location';
+import LocationCallout from '../components/location-callout';
 import BottomNavbar from '../components/global/bottom-navbar';
 import Header from '../components/global/header';
 
@@ -43,9 +45,12 @@ class LocationsView extends Component {
       modalVisible: false,
       selectedTags: [],
       coords: null,
+      openLocationDetail: false,
+      locationDetail: null,
     };
 
     this.filterByTags = this.filterByTags.bind(this);
+    this.openLocationDetail = this.openLocationDetail.bind(this);
   }
 
   componentDidMount() {
@@ -57,17 +62,28 @@ class LocationsView extends Component {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const initialRegion = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          // latitude: 44.81755481,
-          // longitude: 20.45967579,
+          // latitude: position.coords.latitude,
+          // longitude: position.coords.longitude,
+          latitude: 44.81755481,
+          longitude: 20.45967579,
           latitudeDelta: 0.02,
           longitudeDelta: 0.02,
         };
 
         this.onRegionChange(null, initialRegion);
       },
-      (error) => alert(JSON.stringify(error)),
+      (error) => {
+        const initialRegion = {
+          latitude: 44.81755481,
+          longitude: 20.45967579,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
+        };
+
+        this.onRegionChange(null, initialRegion);
+
+        // alert(JSON.stringify(error));
+      },
       {enableHighAccuracy: true, timeout: 20000}
     );
 
@@ -157,6 +173,20 @@ class LocationsView extends Component {
     this.setState({modalVisible: !modalVisible});
   }
 
+  openLocationDetail(locationDetail) {
+    this.setState({
+      openLocationDetail: true,
+      locationDetail: locationDetail,
+    });
+  }
+
+  closeLocationDetail() {
+    this.setState({
+      openLocationDetail: false,
+      locationDetail: null,
+    });
+  }
+
   render() {
     const {
       isFetchingLocations,
@@ -169,7 +199,9 @@ class LocationsView extends Component {
       initialRegion,
       locations,
       selectedTags,
-      modalVisible
+      modalVisible,
+      openLocationDetail,
+      locationDetail,
     } = this.state;
 
     return (
@@ -193,8 +225,13 @@ class LocationsView extends Component {
                 <MapView.Marker
                   key={ index }
                   coordinate={marker.coordinate}
-                  title={marker.name}
-                  description={marker.address} />
+                  pinColor='#b22222' >
+                  <MapView.Callout onPress={ () => { this.openLocationDetail(marker) } }>
+                    <LocationCallout
+                      locationDetailData={ marker }
+                    />
+                  </MapView.Callout>
+                </MapView.Marker>
               )) : null }
             </MapView> : null }
           <ModalFilter
@@ -203,6 +240,10 @@ class LocationsView extends Component {
             selectedTags={ selectedTags }
             setModalVisible={ () => { this.setModalVisible()} }
             modalVisible={ modalVisible } />
+          <ModalLocation
+            locationDetail={ locationDetail }
+            setModalVisible={ () => { this.closeLocationDetail()} }
+            modalVisible={ openLocationDetail } />
           { isFetchingLocations ? <Loading /> : null }
         </View>
       </View>

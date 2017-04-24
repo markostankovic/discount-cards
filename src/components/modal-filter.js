@@ -43,10 +43,12 @@ class ModalFilter extends Component {
             </TouchableHighlight>
           </View>
           { this.renderFilterOptions() }
-          <Button
-            onPress={ setModalVisible }
-            title="Close Filter"
-            color="#222222" />
+          <View style={ styles.buttonsWrapper }>
+            <Button
+              onPress={ setModalVisible }
+              title="Close Filter"
+              color="#b22222" />
+          </View>
         </ScrollView>
       </Modal>
     );
@@ -129,6 +131,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
     padding: 15,
+  },
+  buttonsWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 10
   }
 });
 
